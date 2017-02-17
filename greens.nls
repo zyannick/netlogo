@@ -61,13 +61,7 @@ to basic-team-harvesters-go-and-eat
       [
         set heading towards b - 20 + random 40
         if (not free-ahead? 2) [ 
-          ifelse (not free-ahead? 3 )
-          [
-            rt 180
-           ]
-          [
           rt random 90
-          ]
            ]
         forward-move speed
       ]
@@ -79,13 +73,7 @@ to basic-team-harvesters-go-and-eat
       [
         set heading towardsxy mem0 mem1
         if (not free-ahead? 2) [ 
-          ifelse (not free-ahead? 3 )
-          [
-            rt 180
-           ]
-          [
           rt random 90
-          ]
            ]
         forward-move speed
       ]
@@ -118,7 +106,8 @@ to basic-team-call-rocket-launcher [ x y espece ]
 end
 
 to basic-team-call-explorer [ x y espece ]
-  let ex one-of perceive color Explorers
+  let ex min-one-of perceive color Explorers [ distancexy x y ]
+  ;;let ex one-of perceive color Explorers
   if (ex != nobody) [
     ask ex [ basic-team-set-target x y espece ]
   ]
@@ -160,13 +149,7 @@ to basic-team-shoot
     ]
     [ set heading towardsxy mem0 mem1 - 20 + random 40
       if (not free-ahead? 2) [ 
-        ifelse (not free-ahead? 3 )
-          [
-            rt 180
-           ]
-          [
           rt random 90
-          ]
          ]
       forward-move speed
     ]
@@ -191,8 +174,9 @@ to goGreenExplorer
   basic-team-drive-harvesters
 
   ifelse (not basic-team-no-target?) [
-    basic-team-call-rocket-launcher mem0 mem1 mem2
-    basic-team-call-explorer mem0 mem1 mem2
+    ifelse ( mem2 = Burgers )
+    [ basic-team-call-explorer mem0 mem1 mem2 ]
+    [ basic-team-call-rocket-launcher mem0 mem1 mem2 ] 
   ]
   [ let h one-of perceive-robots ennemy
     if ( h != nobody ) [ basic-team-call-rocket-launcher [xcor] of h [ycor] of h [breed] of h]
